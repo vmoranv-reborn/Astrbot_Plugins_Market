@@ -299,7 +299,7 @@ const showDetails = () => {
   overflow: visible;
   contain: content;
   transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-  border: 3px solid var(--border-base);
+  border: 2px solid var(--border-base);
   box-shadow: var(--shadow-sm);
   background-color: var(--bg-card);
   min-height: 180px;
@@ -309,12 +309,13 @@ const showDetails = () => {
   min-width: 100%;
   animation: cardAppear 0.5s cubic-bezier(0.23, 1, 0.32, 1) backwards;
   animation-delay: calc(0.4s + (var(--card-index, 0) * 0.08s));
+  border-radius: 4px;
 }
 
 .plugin-card:hover {
   transform: translateY(-4px);
-  border-color: var(--border-hover);
-  box-shadow: var(--shadow-md);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 15px rgba(255, 153, 0, 0.3);
 }
 
 .card-header {
@@ -322,9 +323,9 @@ const showDetails = () => {
   justify-content: space-between;
   align-items: center;
   padding: 8px 16px;
-  border-bottom: 1px solid var(--border-base);
-  background: var(--bg-card);
-  border-radius: 15px 15px 0 0;
+  border-bottom: 2px solid var(--primary-color);
+  background: linear-gradient(90deg, var(--bg-card) 0%, rgba(255, 153, 0, 0.1) 100%);
+  border-radius: 4px 4px 0 0;
   min-height: 44px;
 }
 
@@ -359,12 +360,13 @@ const showDetails = () => {
 .card-header h3 {
   margin: 0;
   font-size: 1.25em;
-  font-weight: 600;
-  color: var(--text-primary);
+  font-weight: 700;
+  color: var(--primary-color);
   letter-spacing: -0.3px;
   font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   white-space: nowrap;
   --translate-distance: 0px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .plugin-name-text {
@@ -433,12 +435,13 @@ const showDetails = () => {
 }
 
 .version-tag {
-  background-color: var(--bg-n-tag) !important;
-  color: var(--text-n-tag) !important;
+  background-color: var(--primary-color) !important;
+  color: #000000 !important;
   border: none !important;
   padding: 2px 10px !important;
-  font-weight: 600;
+  font-weight: 700;
   flex-shrink: 0;
+  border-radius: 3px;
 }
 
 .card-content {
@@ -492,18 +495,21 @@ const showDetails = () => {
 .plugin-tag {
   transition: all 0.2s ease;
   margin-bottom: 2px;
-  background-color: var(--primary-color) !important;
-  color: var(--text-tag) !important;
-  border: none !important;
+  background-color: rgba(255, 153, 0, 0.2) !important;
+  color: var(--primary-color) !important;
+  border: 1px solid var(--primary-color) !important;
   padding: 2px 8px !important;
   display: inline-flex;
   align-items: center;
   flex: 0 0 auto;
+  border-radius: 3px;
+  font-weight: 600;
 }
 
 .plugin-tag:hover {
   transform: scale(1.05);
-  opacity: 0.9;
+  background-color: rgba(255, 153, 0, 0.4) !important;
+  box-shadow: 0 0 8px rgba(255, 153, 0, 0.3);
 }
 
 .plugin-meta {
@@ -514,7 +520,7 @@ const showDetails = () => {
   padding: 4px 0;
   margin: 0px 0;
   border-top: 1px solid var(--border-base);
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
   min-height: 28px;
 }
 
@@ -522,16 +528,17 @@ const showDetails = () => {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-weight: 500;
-  color: var(--text-secondary);
+  font-weight: 600;
+  color: var(--primary-color);
 }
 
 .stars {
   color: var(--primary-color);
-  font-weight: 600;
+  font-weight: 700;
   display: flex;
   align-items: center;
   gap: 6px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .plugin-links {
@@ -553,12 +560,21 @@ const showDetails = () => {
 }
 
 .button-group :deep(.main-button) {
-  border-radius: 8px;
+  border-radius: 4px;
   height: 28px;
   padding: 0 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: var(--primary-color) !important;
+  border: 1px solid var(--primary-color) !important;
+  color: #000000 !important;
+  font-weight: 700;
+}
+
+.button-group :deep(.main-button:hover) {
+  background-color: var(--primary-hover) !important;
+  box-shadow: 0 0 10px rgba(255, 153, 0, 0.5);
 }
 
 .icon-buttons :deep(.n-button) {
@@ -569,17 +585,18 @@ const showDetails = () => {
   align-items: center;
   justify-content: center;
   color: var(--text-secondary);
-  background-color: var(--bg-hover);
-  border: 1px solid var(--border-base);
+  background-color: rgba(255, 153, 0, 0.1);
+  border: 1px solid var(--primary-color);
   transition: all 0.2s ease;
-  border-radius: 8px;
+  border-radius: 4px;
 }
 
 .icon-buttons :deep(.n-button:hover) {
-  color: var(--primary-color);
-  border-color: transparent;
-  background-color: var(--primary-light);
+  color: #000000;
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
   transform: translateY(-1px);
+  box-shadow: 0 0 8px rgba(255, 153, 0, 0.4);
 }
 
 @media (max-width: 480px) {

@@ -10,8 +10,46 @@ export const usePluginStore = defineStore('plugins', () => {
   const pageSize = ref(12)
   const isDarkMode = ref(savedTheme === 'dark')
   const isLoading = ref(true)
-  const sortBy = ref('default') 
+  const sortBy = ref('default')
   const randomSeed = ref(0)
+  
+  // API相关状态
+  const currentApiIndex = ref(0)
+  
+  // 从环境变量解析API端点
+  const apiEndpoints = computed(() => {
+    const endpointsStr = import.meta.env.VITE_API_ENDPOINTS
+    
+    if (!endpointsStr) {
+      // 默认API端点
+      return [
+        { name: '官方API', url: 'https://api.soulter.top/astrbot/plugins' }
+      ]
+    }
+    
+    // 解析格式：名称:URL|名称:URL
+    const endpoints = endpointsStr.split('|').map(item => {
+      const colonIndex = item.indexOf(':')
+      if (colonIndex === -1) {
+        // 如果没有找到冒号，返回默认值
+        return { name: item.trim(), url: '' }
+      }
+      const name = item.substring(0, colonIndex).trim()
+      const url = item.substring(colonIndex + 1).trim()
+      return { name, url }
+    })
+    return endpoints
+  })
+  
+  const currentApi = computed(() => apiEndpoints.value[currentApiIndex.value])
+  
+  function switchApi(index) {
+    const endpoints = apiEndpoints.value
+    if (index >= 0 && index < endpoints.length) {
+      currentApiIndex.value = index
+      loadPlugins()
+    }
+  }
   
   watch(isDarkMode, (newValue) => {
     localStorage.setItem('theme-preference', newValue ? 'dark' : 'light')
@@ -115,23 +153,53 @@ export const usePluginStore = defineStore('plugins', () => {
   async function loadPlugins() {
     isLoading.value = true
     try {
-      const response = await fetch('https://api.soulter.top/astrbot/plugins', { cache: 'no-store' })
+      const response = await fetch(currentApi.value.url, { cache: 'no-store' })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
       const data = await response.json()
-      plugins.value = Object.entries(data).map(([keyName, details]) => {
-        const tags = details.tags ? 
-          (Array.isArray(details.tags) ? details.tags : [details.tags]) 
-          : []
-        const machineName = keyName
-        const displayName = details.display_name || details.name || machineName
+      
+      // 处理不同API的数据格式
+      let pluginData = []
+      if (Array.isArray(data)) {
+        // 社区API格式 (数组)
+        pluginData = data.map((plugin, index) => {
+          const tags = plugin.tags ?
+            (Array.isArray(plugin.tags) ? plugin.tags : [plugin.tags])
+            : []
+          const machineName = plugin.id || plugin.name || `plugin-${index}`
+          const displayName = plugin.display_name || plugin.name || machineName
 
-        return {
-          ...details,
-          id: machineName,
-          name: displayName,          
-          display_name: displayName,  
-          tags
-        }
-      })
+          return {
+            ...plugin,
+            id: machineName,
+            name: displayName,
+            display_name: displayName,
+            tags
+          }
+        })
+      } else {
+        // 官方API格式 (对象)
+        pluginData = Object.entries(data).map(([keyName, details]) => {
+          const tags = details.tags ?
+            (Array.isArray(details.tags) ? details.tags : [details.tags])
+            : []
+          const machineName = keyName
+          const displayName = details.display_name || details.name || machineName
+
+          return {
+            ...details,
+            id: machineName,
+            name: displayName,
+            display_name: displayName,
+            tags
+          }
+        })
+      }
+      
+      plugins.value = pluginData
     } catch (error) {
       console.error('Error loading plugins:', error)
       plugins.value = []
@@ -180,12 +248,15 @@ export const usePluginStore = defineStore('plugins', () => {
     sortBy,
     isLoading,
     randomSeed,
+    currentApiIndex,
+    apiEndpoints,
     // 计算属性
     allTags,
     tagOptions,
     filteredPlugins,
     totalPages,
     paginatedPlugins,
+    currentApi,
     // 动作
     loadPlugins,
     setDarkMode,
@@ -194,6 +265,7 @@ export const usePluginStore = defineStore('plugins', () => {
     setCurrentPage,
     setSortBy,
     toggleTheme,
-    refreshRandomOrder
+    refreshRandomOrder,
+    switchApi
   }
 })

@@ -104,7 +104,7 @@ const navigateToSubmit = () => {
   font-size: 14px;
   height: 40px;
   line-height: 40px;
-  color: var(--text-tag);
+  color: var(--text-color);
   white-space: nowrap;
   margin-right: -56px;
   transform: translateX(100%);

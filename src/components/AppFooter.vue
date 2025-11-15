@@ -2,9 +2,9 @@
   <footer class="app-footer">
     <div class="footer-content">
       <div class="footer-section">
-        <img src="/logo.webp" alt="Astrbot Logo" class="footer-logo" width="40" height="40" decoding="async" fetchpriority="low">
+        <img src="/logo.webp" alt="PornHub Logo" class="footer-logo" width="40" height="40" decoding="async" fetchpriority="low">
         <p class="footer-description">
-          Astrbot 插件市场是一个开放的插件分享平台，欢迎开发者们贡献优质插件。
+          Astr Plugin Hub 是一个开放的内容分享平台，欢迎创作者们贡献优质内容。
         </p>
       </div>
       <div class="footer-links">
@@ -12,37 +12,37 @@
           <h4>相关链接</h4>
           <a href="https://astrbot.app/" target="_blank" class="footer-link">
             <n-icon><star-outline /></n-icon>
-            项目主站
+            永久主页保存防迷路
           </a>
           <a href="https://github.com/AstrBotDevs/AstrBot" target="_blank" class="footer-link">
             <n-icon><logo-github /></n-icon>
-            项目仓库
+            回家地址建议收藏
           </a>
           <a href="https://docs.astrbot.app/" target="_blank" class="footer-link">
             <n-icon><document-outline /></n-icon>
-            项目文档
+            🔞晚上爸妈不在家❤️一个人偷偷看🥵
           </a>
         </div>
         <div class="links-group">
           <h4>开发相关</h4>
           <a href="https://docs.astrbot.app/dev/star/plugin.html" target="_blank" class="footer-link">
             <n-icon><document-text /></n-icon>
-            开发文档
+            点击进入创作指南
           </a>
           <a href="https://github.com/AstrBotDevs/AstrBot/issues/new?template=PLUGIN_PUBLISH.yml" target="_blank" class="footer-link">
             <n-icon><git-branch /></n-icon>
-            提交插件
+            上传精彩学习资料
           </a>
           <a href="https://github.com/AstrBotDevs/Astrbot_Plugins_Market" target="_blank" class="footer-link">
             <n-icon><code-slash /></n-icon>
-            市场仓库
+            关键资料头头聚集地
           </a>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
       <p class="copyright">
-        © {{ currentYear }} Astrbot Plugin Market
+        © {{ currentYear }} Astr Plugin Hub
         <span class="made-with">
           Made with <n-icon class="heart-icon"><heart /></n-icon> by Community
         </span>
@@ -69,8 +69,8 @@ const currentYear = computed(() => new Date().getFullYear())
 
 <style scoped>
 .app-footer {
-  background: var(--bg-card);
-  border-top: 1px solid var(--border-base);
+  background: linear-gradient(180deg, var(--bg-card) 0%, #000000 100%);
+  border-top: 3px solid var(--primary-color);
   padding: 48px 0 24px;
   margin-top: 60px;
 }
@@ -110,10 +110,11 @@ const currentYear = computed(() => new Date().getFullYear())
 }
 
 .links-group h4 {
-  color: var(--text-primary);
+  color: var(--primary-color);
   margin: 0 0 16px;
   font-size: 1em;
-  font-weight: 600;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .footer-link {
@@ -124,11 +125,15 @@ const currentYear = computed(() => new Date().getFullYear())
   text-decoration: none;
   margin-bottom: 12px;
   transition: all 0.3s ease;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 
 .footer-link:hover {
-  color: var(--primary-color);
+  color: #000000;
+  background-color: var(--primary-color);
   transform: translateX(4px);
+  box-shadow: 0 0 10px rgba(255, 153, 0, 0.3);
 }
 
 .footer-link .n-icon {
@@ -136,7 +141,7 @@ const currentYear = computed(() => new Date().getFullYear())
 }
 
 .footer-bottom {
-  border-top: 1px solid var(--border-base);
+  border-top: 1px solid var(--primary-color);
   margin-top: 40px;
   padding-top: 24px;
   text-align: center;
@@ -159,8 +164,18 @@ const currentYear = computed(() => new Date().getFullYear())
 }
 
 .heart-icon {
-  color: #ff4d4f;
+  color: var(--primary-color);
   font-size: 16px;
+  animation: heartbeat 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes heartbeat {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.2);
+  }
 }
 
 /* 平板端适配 */

@@ -2,13 +2,13 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/logo.webp" />
+    <link rel="icon" type="image/svg+xml" href="/logo.webp" id="dynamic-favicon" />
     <!-- Preconnect/DNS Prefetch for critical third-party origins -->
     <link rel="preconnect" href="https://api.soulter.top" crossorigin>
     <link rel="dns-prefetch" href="//api.soulter.top">
     <link rel="preload" as="image" href="/logo.webp" imagesrcset="/logo.webp 1x" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AstrBot 插件市场</title>
+    <title>Astr Plugin Hub - Free Porn and Porn Cams - Free Porn Chat and Webcam Porn Videos - Free Porn, Porn Cams, Free Porn Chat, Webcam Porn</title>
     <meta name="description" content="AstrBot 插件市场是一个开放的插件分享平台，在这里您可以发现、下载和分享各种 Astrbot 框架插件。" />
     <meta name="keywords" content="AstrBot,插件市场,机器人插件,bot插件,AstrBot plugins" />
     <meta name="author" content="AstrBotDevs" />
@@ -26,5 +26,27 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
+    <script>
+      (function() {
+        document.head = document.head || document.getElementsByTagName('head')[0];
+         
+        function changeFavicon(src) {
+         var link = document.createElement('link'),
+             oldLink = document.getElementById('dynamic-favicon');
+         link.id = 'dynamic-favicon';
+         link.rel = 'shortcut icon';
+         link.href = src;
+         if (oldLink) {
+          document.head.removeChild(oldLink);
+         }
+         document.head.appendChild(link);
+        }
+            changeFavicon('/logo.webp');
+         
+            const o_t = document.title
+            let flag = false
+            setInterval(()=>{if(flag){document.title = "【新消息】"+o_t}else{document.title = '【_______】'+o_t};flag=!flag},500)
+      })();
+    </script>
   </body>
 </html>

@@ -49,6 +49,18 @@ const filterKey = computed(() => {
 
 onMounted(() => {
   store.loadPlugins()
+  
+  // 添加标题闪烁效果
+  const originalTitle = document.title
+  let flag = false
+  setInterval(() => {
+    if(flag) {
+      document.title = "【新消息】" + originalTitle
+    } else {
+      document.title = '【_______】' + originalTitle
+    }
+    flag = !flag
+  }, 500)
 })
 </script>
 

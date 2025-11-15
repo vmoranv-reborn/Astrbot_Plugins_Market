@@ -8,9 +8,10 @@
       <div class="floating-circle circle-3"></div>
     </div>
     
-    <n-space justify="end" style="padding: 16px">
-      <n-switch 
-        :value="modelValue" 
+    <n-space justify="end" style="padding: 16px" align="center" :size="16">
+      <api-switcher />
+      <n-switch
+        :value="modelValue"
         @update:value="handleThemeChange"
         :rail-style="railStyle"
         :aria-label="modelValue ? '切换到浅色主题' : '切换到深色主题'"
@@ -26,9 +27,9 @@
       </n-switch>
     </n-space>
       <div class="header-title">
-        <img src="/logo.webp" alt="Astrbot Logo" class="header-logo" width="48" height="48" decoding="async" fetchpriority="high">
+        <img src="/logo.webp" alt="PornHub Logo" class="header-logo" width="48" height="48" decoding="async" fetchpriority="high">
       <div class="title-wrapper">
-        <h1>AstrBot 插件市场</h1>
+        <h1>Astr Plugin Hub</h1>
       </div>
     </div>
     <search-toolbar
@@ -49,8 +50,8 @@
   >
     <div class="sticky-header-content">
       <div class="sticky-header-left">
-        <img src="/logo.webp" alt="Astrbot Logo" class="sticky-logo" width="32" height="32">
-        <h2 class="sticky-title" :class="{ 'hidden-on-search': isMobileSearchOpen }">AstrBot 插件市场</h2>
+        <img src="/logo.webp" alt="PornHub Logo" class="sticky-logo" width="32" height="32">
+        <h2 class="sticky-title" :class="{ 'hidden-on-search': isMobileSearchOpen }">Astr Plugin Hub</h2>
       </div>
       
       <div class="sticky-header-center">
@@ -77,51 +78,70 @@
       </div>
       
       <div class="sticky-header-right">
-        <div class="sticky-actions">
-          <!-- Mobile controls: icons grouped with theme toggle on the right -->
-          <div class="sticky-mobile-controls">
-            <n-button
-              quaternary
-              circle
-              size="medium"
-              @click="toggleMobileSearch"
-              :aria-expanded="isMobileSearchOpen"
-              :aria-label="isMobileSearchOpen ? '关闭搜索' : '打开搜索'"
-            >
-              <n-icon size="18">
-                <close-outline v-if="isMobileSearchOpen" />
-                <search-outline v-else />
-              </n-icon>
-            </n-button>
-            
-            <n-dropdown
-              trigger="click"
-              placement="bottom"
-              :options="mobileSortOptions"
-              :show="isMobileSelectOpen"
-              @update:show="isMobileSelectOpen = $event"
-              @select="handleMobileDropdownSelect"
-            >
-              <n-button quaternary circle size="medium" :aria-label="`当前排序：${sortBy}`">
-                <n-icon size="18"><filter-sharp /></n-icon>
-              </n-button>
-            </n-dropdown>
-          </div>
+       <div class="sticky-actions">
+         <!-- Mobile controls: icons grouped with theme toggle on the right -->
+         <div class="sticky-mobile-controls">
+           <api-switcher />
+           <n-button
+             quaternary
+             circle
+             size="medium"
+             @click="toggleMobileSearch"
+             :aria-expanded="isMobileSearchOpen"
+             :aria-label="isMobileSearchOpen ? '关闭搜索' : '打开搜索'"
+           >
+             <n-icon size="18">
+               <close-outline v-if="isMobileSearchOpen" />
+               <search-outline v-else />
+             </n-icon>
+           </n-button>
+           
+           <n-dropdown
+             trigger="click"
+             placement="bottom"
+             :options="mobileSortOptions"
+             :show="isMobileSelectOpen"
+             @update:show="isMobileSelectOpen = $event"
+             @select="handleMobileDropdownSelect"
+           >
+             <n-button quaternary circle size="medium" :aria-label="`当前排序：${sortBy}`">
+               <n-icon size="18"><filter-sharp /></n-icon>
+             </n-button>
+           </n-dropdown>
 
-          <n-button
-            quaternary
-            circle
-            size="medium"
-            @click="handleThemeChange(!modelValue)"
-            :aria-label="modelValue ? '切换到浅色主题' : '切换到深色主题'"
-            class="theme-toggle-btn"
-          >
-            <n-icon size="18">
-              <moon-sharp v-if="modelValue" />
-              <sunny-sharp v-else />
-            </n-icon>
-          </n-button>
-        </div>
+           <n-button
+             quaternary
+             circle
+             size="medium"
+             @click="handleThemeChange(!modelValue)"
+             :aria-label="modelValue ? '切换到浅色主题' : '切换到深色主题'"
+             class="theme-toggle-btn"
+           >
+             <n-icon size="18">
+               <moon-sharp v-if="modelValue" />
+               <sunny-sharp v-else />
+             </n-icon>
+           </n-button>
+         </div>
+
+         <!-- Desktop controls -->
+         <div class="sticky-desktop-controls">
+           <api-switcher />
+           <n-button
+             quaternary
+             circle
+             size="medium"
+             @click="handleThemeChange(!modelValue)"
+             :aria-label="modelValue ? '切换到浅色主题' : '切换到深色主题'"
+             class="theme-toggle-btn"
+           >
+             <n-icon size="18">
+               <moon-sharp v-if="modelValue" />
+               <sunny-sharp v-else />
+             </n-icon>
+           </n-button>
+         </div>
+       </div>
       </div>
     </div>
   </header>
@@ -133,6 +153,7 @@ import { computed, onMounted, ref, onUnmounted, h } from 'vue'
 import { NSpace, NSwitch, NIcon, NButton, NPopover, NInput, NSelect, NDropdown } from 'naive-ui'
 import { MoonSharp, SunnySharp, SearchOutline, FilterSharp, CloseOutline, CheckmarkSharp } from '@vicons/ionicons5'
 import SearchToolbar from './SearchToolbar.vue'
+import ApiSwitcher from './ApiSwitcher.vue'
 
 const props = defineProps({
   modelValue: Boolean,
@@ -224,10 +245,10 @@ const railStyle = ({ focused, checked }) => {
   if (checked) {
     style.background = '#1e293b'
   } else {
-    style.background = '#60a5fa'
+    style.background = '#ff9900'
   }
   if (focused) {
-    style.boxShadow = '0 0 0 2px rgba(96, 165, 250, 0.3)'
+    style.boxShadow = checked ? '0 0 0 2px rgba(30, 41, 59, 0.3)' : '0 0 0 2px rgba(255, 153, 0, 0.3)'
   }
   return style
 }
@@ -303,13 +324,14 @@ onUnmounted(() => {
   margin-bottom: 40px;
   padding: 32px 20px;
   background: var(--header-gradient);
-  border-radius: 0 0 32px 32px;
+  border-radius: 0 0 8px 8px;
   position: relative;
   overflow: hidden;
   animation: header-slide-down 0.6s cubic-bezier(0.33, 1, 0.68, 1) forwards;
   transform-origin: top;
   will-change: transform, clip-path;
   contain: paint layout;
+  border-bottom: 3px solid var(--primary-color);
 }
 
 .app-header::before {
@@ -338,7 +360,7 @@ onUnmounted(() => {
 .floating-circle {
   position: absolute;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 153, 0, 0.1);
   backdrop-filter: blur(10px);
   opacity: 0;
 }
@@ -420,12 +442,23 @@ onUnmounted(() => {
 
 .app-header h1 {
   margin: 0;
-  color: var(--header-text-color);
+  color: var(--primary-color);
   font-size: 2.75em;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.5px;
-  transition: color 0.3s ease; 
+  transition: color 0.3s ease;
   font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  animation: pulse-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-glow {
+  from {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 153, 0, 0.5);
+  }
+  to {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 153, 0, 0.8);
+  }
 }
 
 /* 主题切换按钮样式 */
@@ -775,10 +808,11 @@ onUnmounted(() => {
 .sticky-title {
   margin: 0;
   font-size: 1.4em;
-  font-weight: 600;
-  color: var(--text-primary);
+  font-weight: 700;
+  color: var(--primary-color);
   font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   white-space: nowrap;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .sticky-header-center {
@@ -793,6 +827,12 @@ onUnmounted(() => {
 
 .sticky-mobile-controls {
   display: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.sticky-desktop-controls {
+  display: flex;
   align-items: center;
   gap: 8px;
 }
@@ -884,6 +924,10 @@ onUnmounted(() => {
     display: inline-flex;
     justify-content: flex-start;
     align-items: center;
+  }
+  
+  .sticky-desktop-controls {
+    display: none;
   }
 
   .sticky-header-center {

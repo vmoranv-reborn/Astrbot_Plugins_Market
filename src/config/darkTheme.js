@@ -1,69 +1,81 @@
 export const darkThemeOverrides = {
-  'common': { 
+  'common': {
     duration: '0.2s',
-    borderRadius: '8px',
-    primaryColor: '#3b82f6',
-    primaryColorHover: '#60a5fa',
-    primaryColorPressed: '#2563eb',
-    baseColor: '#1e293b',
-    textColor2: '#f1f5f9',
-    textColor3: '#cbd5e1'
+    borderRadius: '4px',
+    primaryColor: '#ff9900',
+    primaryColorHover: '#ffaa00',
+    primaryColorPressed: '#e68900',
+    baseColor: '#000000',
+    textColor2: '#ffffff',
+    textColor3: '#cccccc'
   },
   'InternalSelection': {
-    textColor: '#f1f5f9',
-    placeholderColor: '#cbd5e1'
+    textColor: '#ffffff',
+    placeholderColor: '#cccccc',
+    color: '#1a1a1a',
+    colorActive: '#242424',
+    border: '1px solid #333333',
+    borderHover: '1px solid #ff9900',
+    borderActive: '1px solid #ff9900',
+    borderFocus: '1px solid #ff9900'
   },
   'Pagination': {
-    itemTextColor: '#fff',
-    itemColorHover: 'rgba(255, 255, 255, 0.1)',
-    itemColorPressed: 'rgba(255, 255, 255, 0.2)',
-    itemColorActive: 'rgba(255, 255, 255, 0.2)',
-    itemBorderRadius: '6px'
+    itemTextColor: '#ffffff',
+    itemColorHover: 'rgba(255, 153, 0, 0.2)',
+    itemColorPressed: 'rgba(255, 153, 0, 0.3)',
+    itemColorActive: 'rgba(255, 153, 0, 0.4)',
+    itemBorderRadius: '4px'
   },
   'Tag': {
-    borderRadius: '6px'
+    borderRadius: '4px'
   },
   'Input': {
-    borderHover: '#60a5fa',
-    borderFocus: '#3b82f6'
+    borderHover: '#ff9900',
+    borderFocus: '#ff9900',
+    color: '#1a1a1a',
+    textColor: '#ffffff',
+    placeholderColor: '#cccccc'
   },
   'Card': {
-    borderRadius: '16px',
-    color: '#1e293b',
-    colorModal: '#1e293b'
+    borderRadius: '4px',
+    color: '#1a1a1a',
+    colorModal: '#1a1a1a'
   },
   'Select': {
     peers: {
       InternalSelection: {
-        textColor: '#f1f5f9',
-        placeholderColor: '#cbd5e1',
-        color: 'rgba(30, 41, 59, 0.9)',
-        colorActive: 'rgba(30, 41, 59, 0.95)',
-        border: '1px solid #334155',
-        borderHover: '1px solid #60a5fa',
-        borderActive: '1px solid #3b82f6',
-        borderFocus: '1px solid #3b82f6'
+        textColor: '#ffffff',
+        placeholderColor: '#cccccc',
+        color: '#1a1a1a',
+        colorActive: '#242424',
+        border: '1px solid #333333',
+        borderHover: '1px solid #ff9900',
+        borderActive: '1px solid #ff9900',
+        borderFocus: '1px solid #ff9900'
       },
       InternalSelectMenu: {
-        color: '#1e293b',
-        optionTextColor: '#f1f5f9',
-        optionColorHover: '#334155',
-        optionColorActive: '#0c4a6e',
-        optionTextColorActive: '#38bdf8'
+        color: '#1a1a1a',
+        optionTextColor: '#ffffff',
+        optionColorHover: 'rgba(255, 153, 0, 0.2)',
+        optionColorActive: 'rgba(255, 153, 0, 0.3)',
+        optionTextColorActive: '#000000'
       }
     }
   },
   'Button': {
-    borderRadius: '8px',
+    borderRadius: '4px',
     paddingMedium: '0 18px',
     heightMedium: '34px',
-    textColorPrimary: '#ffffff',
-    textColorHoverPrimary: '#ffffff',
-    textColorQuaternary: '#f1f5f9',
-    textColorQuaternaryHover: '#f1f5f9',
-    textColorQuaternaryPressed: '#f1f5f9',
+    textColorPrimary: '#000000',
+    textColorHoverPrimary: '#000000',
+    textColorQuaternary: '#ffffff',
+    textColorQuaternaryHover: '#ffffff',
+    textColorQuaternaryPressed: '#ffffff',
     colorQuaternary: 'transparent',
-    colorQuaternaryHover: 'rgba(255, 255, 255, 0.1)',
-    colorQuaternaryPressed: 'rgba(255, 255, 255, 0.15)'
+    colorQuaternaryHover: 'rgba(255, 153, 0, 0.1)',
+    colorQuaternaryPressed: 'rgba(255, 153, 0, 0.2)',
+    borderQuaternary: '1px solid #ff9900',
+    borderQuaternaryHover: '1px solid #ffaa00',
+    borderQuaternaryPressed: '1px solid #e68900'
   }
 }
