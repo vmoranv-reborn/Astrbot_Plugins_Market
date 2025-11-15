@@ -16,6 +16,10 @@ export const usePluginStore = defineStore('plugins', () => {
   // API相关状态
   const currentApiIndex = ref(0)
   
+  // 虹膜遮罩相关状态
+  const irisMaskActive = ref(false)
+  const irisMaskPosition = ref({ x: window.innerWidth / 2, y: window.innerHeight / 2 })
+  
   // 从环境变量解析API端点
   const apiEndpoints = computed(() => {
     const endpointsStr = import.meta.env.VITE_API_ENDPOINTS
@@ -49,6 +53,27 @@ export const usePluginStore = defineStore('plugins', () => {
       currentApiIndex.value = index
       loadPlugins()
     }
+  }
+  
+  function triggerIrisAnimation(position = null, callback = null) {
+    // 设置虹膜遮罩位置，如果没有提供位置则使用屏幕中心
+    if (position) {
+      irisMaskPosition.value = position
+    } else {
+      irisMaskPosition.value = { x: window.innerWidth / 2, y: window.innerHeight / 2 }
+    }
+    
+    // 激活虹膜遮罩
+    irisMaskActive.value = true
+    
+    // 动画完成后执行回调
+    setTimeout(() => {
+      if (callback) callback()
+      // 延迟关闭遮罩
+      setTimeout(() => {
+        irisMaskActive.value = false
+      }, 300)
+    }, 600)
   }
   
   watch(isDarkMode, (newValue) => {
@@ -250,6 +275,8 @@ export const usePluginStore = defineStore('plugins', () => {
     randomSeed,
     currentApiIndex,
     apiEndpoints,
+    irisMaskActive,
+    irisMaskPosition,
     // 计算属性
     allTags,
     tagOptions,
@@ -266,6 +293,7 @@ export const usePluginStore = defineStore('plugins', () => {
     setSortBy,
     toggleTheme,
     refreshRandomOrder,
-    switchApi
+    switchApi,
+    triggerIrisAnimation
   }
 })

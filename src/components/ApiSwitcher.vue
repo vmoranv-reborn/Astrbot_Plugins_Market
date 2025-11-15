@@ -12,11 +12,6 @@
       </div>
     </div>
     
-    <!-- 虹膜动画遮罩 -->
-    <div class="iris-mask" :class="{ 'is-active': isAnimating }" ref="irisMask">
-      <div class="iris-content"></div>
-    </div>
-    
     <!-- 下拉菜单 -->
     <transition name="dropdown">
       <div v-if="isDropdownOpen" class="api-dropdown" ref="dropdown">
@@ -49,15 +44,13 @@ import { usePluginStore } from '../stores/plugins'
 
 const store = usePluginStore()
 const { currentApi, currentApiIndex } = storeToRefs(store)
-const { switchApi } = store
+const { switchApi, triggerIrisAnimation } = store
 
 // 直接获取apiEndpoints以确保响应性
 const apiEndpoints = computed(() => store.apiEndpoints)
 
 const isDropdownOpen = ref(false)
-const isAnimating = ref(false)
 const dropdown = ref(null)
-const irisMask = ref(null)
 
 function toggleDropdown(event) {
   event.stopPropagation()
@@ -67,36 +60,19 @@ function toggleDropdown(event) {
 function selectApi(index, event) {
   event.stopPropagation()
   if (index !== currentApiIndex.value) {
-    // 触发虹膜动画
-    triggerIrisAnimation(() => {
+    // 获取点击位置
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = rect.left + rect.width / 2
+    const y = rect.top + rect.height / 2
+    
+    // 触发全局虹膜动画
+    triggerIrisAnimation({ x, y }, () => {
       switchApi(index)
       isDropdownOpen.value = false
     })
   } else {
     isDropdownOpen.value = false
   }
-}
-
-function triggerIrisAnimation(callback) {
-  isAnimating.value = true
-  
-  // 获取点击位置或使用屏幕中心
-  const x = window.innerWidth / 2
-  const y = window.innerHeight / 2
-  
-  if (irisMask.value) {
-    // 设置虹膜遮罩的起始位置
-    irisMask.value.style.setProperty('--iris-x', `${x}px`)
-    irisMask.value.style.setProperty('--iris-y', `${y}px`)
-  }
-  
-  // 动画完成后执行回调
-  setTimeout(() => {
-    callback()
-    setTimeout(() => {
-      isAnimating.value = false
-    }, 300)
-  }, 600)
 }
 
 // 点击外部关闭下拉菜单
@@ -170,47 +146,6 @@ onUnmounted(() => {
   transform: rotate(180deg);
 }
 
-/* 虹膜动画遮罩 */
-.iris-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-}
-
-.iris-mask.is-active {
-  opacity: 1;
-  visibility: visible;
-  animation: irisAnimation 0.9s ease-in-out;
-}
-
-.iris-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--body-color);
-  transform-origin: var(--iris-x, 50%) var(--iris-y, 50%);
-}
-
-@keyframes irisAnimation {
-  0% {
-    clip-path: circle(0% at var(--iris-x, 50%) var(--iris-y, 50%));
-  }
-  50% {
-    clip-path: circle(150% at var(--iris-x, 50%) var(--iris-y, 50%));
-  }
-  100% {
-    clip-path: circle(0% at var(--iris-x, 50%) var(--iris-y, 50%));
-  }
-}
-
 /* 下拉菜单 */
 .api-dropdown {
   position: absolute;
@@ -281,11 +216,6 @@ onUnmounted(() => {
 .dropdown-leave-from {
   opacity: 1;
   transform: scaleY(1);
-}
-
-/* 深色主题适配 */
-:global(.dark) .iris-content {
-  background: var(--body-color);
 }
 
 /* 响应式设计 */

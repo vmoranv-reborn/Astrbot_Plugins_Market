@@ -12,6 +12,7 @@
     </n-message-provider>
   </n-config-provider>
   <Analytics />
+  <iris-mask :is-active="irisMaskActive" :position="irisMaskPosition" />
   <SpeedInsights />
 </template>
 
@@ -22,6 +23,7 @@ import { storeToRefs } from 'pinia'
 import { darkTheme, NConfigProvider, NMessageProvider } from 'naive-ui'
 import { highlightConfig } from './plugins/highlight'
 
+import IrisMask from './components/IrisMask.vue'
 import BackToTop from './components/BackToTop.vue'
 
 import { lightThemeOverrides } from './config/lightTheme'
@@ -33,6 +35,8 @@ import { SpeedInsights } from "@vercel/speed-insights/vue"
 
 const store = usePluginStore()
 const { 
+  irisMaskActive,
+  irisMaskPosition,
   isDarkMode,
   searchQuery,
   selectedTag,
