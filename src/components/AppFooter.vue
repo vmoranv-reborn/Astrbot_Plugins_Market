@@ -44,7 +44,7 @@
       <p class="copyright">
         © {{ currentYear }} Astr Plugin Hub
         <span class="made-with">
-          Made with <n-icon class="heart-icon"><heart /></n-icon> by Community
+          Made with <n-icon class="heart-icon"><heart /></n-icon> by vmoranv-reborn
         </span>
       </p>
     </div>
