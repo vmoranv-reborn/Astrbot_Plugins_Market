@@ -29,13 +29,14 @@
             <n-icon><document-text /></n-icon>
             点击进入创作指南
           </a>
-          <a href="https://github.com/AstrBotDevs/AstrBot/issues/new?template=PLUGIN_PUBLISH.yml" target="_blank" class="footer-link">
+          <a href="https://github.com/vmoranv-reborn/AstrBot_Plugins_Collection/issues/new?template=PLUGIN_PUBLISH.yml" target="_blank" class="footer-link">
             <n-icon><git-branch /></n-icon>
             上传精彩学习资料
           </a>
-          <a href="https://github.com/AstrBotDevs/Astrbot_Plugins_Market" target="_blank" class="footer-link">
+          <a href="#" @click.prevent="copyApiSource" class="footer-link">
             <n-icon><code-slash /></n-icon>
-            关键资料头头聚集地
+            <span v-if="!copied">点击获取PastrAPI源</span>
+            <span v-else class="copied-text">已复制!</span>
           </a>
         </div>
       </div>
@@ -44,7 +45,7 @@
       <p class="copyright">
         © {{ currentYear }} Astr Plugin Hub
         <span class="made-with">
-          Made with <n-icon class="heart-icon"><heart /></n-icon> by vmoranv-reborn
+          Made with <n-icon class="heart-icon"><heart /></n-icon> by <a href="https://github.com/vmoranv-reborn" target="_blank" class="github-link">vmoranv-reborn</a>
         </span>
       </p>
     </div>
@@ -52,12 +53,12 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { NIcon } from 'naive-ui'
-import { 
-  LogoGithub, 
-  GitBranch, 
-  DocumentText, 
+import {
+  LogoGithub,
+  GitBranch,
+  DocumentText,
   CodeSlash,
   Heart,
   StarOutline,
@@ -65,6 +66,32 @@ import {
 } from '@vicons/ionicons5'
 
 const currentYear = computed(() => new Date().getFullYear())
+const copied = ref(false)
+
+const copyApiSource = async () => {
+  const apiUrl = 'https://raw.githubusercontent.com/vmoranv-reborn/AstrBot_Plugins_Collection/refs/heads/main/plugin_cache_original.json'
+  
+  try {
+    await navigator.clipboard.writeText(apiUrl)
+    copied.value = true
+    setTimeout(() => {
+      copied.value = false
+    }, 2000)
+  } catch (err) {
+    // 降级方案：使用传统方法复制
+    const textArea = document.createElement('textarea')
+    textArea.value = apiUrl
+    document.body.appendChild(textArea)
+    textArea.select()
+    document.execCommand('copy')
+    document.body.removeChild(textArea)
+    
+    copied.value = true
+    setTimeout(() => {
+      copied.value = false
+    }, 2000)
+  }
+}
 </script>
 
 <style scoped>
@@ -167,6 +194,35 @@ const currentYear = computed(() => new Date().getFullYear())
   color: var(--primary-color);
   font-size: 16px;
   animation: heartbeat 1.5s ease-in-out infinite alternate;
+}
+
+.github-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.github-link:hover {
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(255, 153, 0, 0.8);
+}
+
+.copied-text {
+  color: #ef4444;
+  font-weight: 600;
+  animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes heartbeat {
