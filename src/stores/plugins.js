@@ -26,7 +26,7 @@ export const usePluginStore = defineStore('plugins', () => {
     if (!endpointsStr) {
       // 默认API端点
       return [
-        { name: '官方API', url: 'https://api.soulter.top/astrbot/plugins' }
+        { name: 'PastarAPI', url: 'https://raw.githubusercontent.com/vmoranv-reborn/AstrBot_Plugins_Collection/refs/heads/main/plugin_cache_original.json' }
       ]
     }
     
