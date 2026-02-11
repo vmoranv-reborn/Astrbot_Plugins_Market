@@ -48,65 +48,66 @@
         <!-- 步骤1：表单 -->
         <div v-if="currentStep === 1" class="form-section">
           <n-card title="基本信息" class="form-card">
-            <n-form ref="formRef" :model="formData" :rules="rules">
-              <n-grid :x-gap="12" :cols="1" :item-responsive="true">
-                <n-grid-item>
+            <p class="form-card-tip">请填写公开可访问的插件信息，必填项完整后可自动生成并预填 GitHub Issue。</p>
+            <n-form ref="formRef" :model="formData" :rules="rules" label-placement="top">
+              <div class="form-grid">
+                <div class="form-field">
                   <n-form-item label="插件名" path="name">
                     <n-input 
                       v-model:value="formData.name" 
                       placeholder="插件名，请以 astrbot_plugin_ 开头"
                     />
                   </n-form-item>
-                </n-grid-item>
-                <n-grid-item>
+                </div>
+                <div class="form-field">
                   <n-form-item label="展示名称" path="display_name">
                     <n-input 
                       v-model:value="formData.display_name" 
                       placeholder="用于展示的插件名，方便人类阅读"
                     />
                   </n-form-item>
-                </n-grid-item>
-                <n-grid-item>
+                </div>
+                <div class="form-field form-field--full">
                   <n-form-item label="插件介绍" path="desc">
                     <n-input 
                       v-model:value="formData.desc" 
                       type="textarea" 
-                      placeholder="插件的简短介绍（最多70字）"
-                      :maxlength="70"
+                      placeholder="插件的简短介绍（支持中文与空格）"
+                      :maxlength="MAX_DESC_LENGTH"
                       :show-count="true"
                       :rows="4"
                       class="desc-textarea"
                       :resizable="false"
                     />
                   </n-form-item>
-                </n-grid-item>
-                <n-grid-item>
+                </div>
+                <div class="form-field">
                   <n-form-item label="作者" path="author">
                     <n-input v-model:value="formData.author" placeholder="请输入作者名称" />
                   </n-form-item>
-                </n-grid-item>
-                <n-grid-item>
+                </div>
+                <div class="form-field">
                   <n-form-item label="仓库地址" path="repo">
                     <n-input v-model:value="formData.repo" placeholder="请输入GitHub仓库地址" />
                   </n-form-item>
-                </n-grid-item>
-                <n-grid-item>
+                </div>
+                <div class="form-field form-field--full">
                   <n-form-item label="标签（可选，最多 5 个，按回车添加）" path="tags">
                     <n-dynamic-tags 
                       v-model:value="formData.tags" 
                       :max="5"
                     />
                   </n-form-item>
-                </n-grid-item>
-                <n-grid-item>
+                </div>
+                <div class="form-field form-field--full">
                   <n-form-item label="社交链接（可选）" path="social_link">
                     <n-input 
                       v-model:value="formData.social_link" 
                       placeholder="请输入完整的社交链接，如个人主页、Twitter等，推荐 GitHub 主页" 
                     />
                   </n-form-item>
-                </n-grid-item>
-              </n-grid>
+                </div>
+              </div>
             </n-form>
           </n-card>
         </div>
@@ -228,8 +229,6 @@ import {
   NLayoutHeader,
   NTimeline,
   NTimelineItem,
-  NGrid,
-  NGridItem,
   NForm, 
   NFormItem, 
   NInput, 
@@ -254,7 +253,9 @@ const store = usePluginStore()
 const formRef = ref(null)
 const generatedJSON = ref('')
 const currentStep = ref(1)
-const MAX_DESC_LENGTH = 30
+const MAX_DESC_LENGTH = 70
+const ISSUE_BASE_URL = 'https://github.com/vmoranv-reborn/AstrBot_Plugins_Collection/issues/new'
+const ISSUE_TEMPLATE = 'PLUGIN_PUBLISH.yml'
 const steps = [
   {
     title: '填写信息',
@@ -304,7 +305,7 @@ const rules = {
     { required: true, message: '请输入插件的简短介绍', trigger: 'blur' },
     { 
       validator: (_, value) => Array.from((value || '').toString()).length <= MAX_DESC_LENGTH,
-      message: '插件介绍最多30字',
+      message: `插件介绍最多${MAX_DESC_LENGTH}字`,
       trigger: ['input', 'blur']
     }
   ],
@@ -377,9 +378,27 @@ const prevStep = () => {
 }
 
 const submitPlugin = () => {
-  const issueUrl = 'https://github.com/vmoranv-reborn/AstrBot_Plugins_Collection/issues/new?template=PLUGIN_PUBLISH.yml'
-  window.open(issueUrl, '_blank')
+  const jsonToSubmit = generatedJSON.value || JSON.stringify({
+    name: formData.name,
+    display_name: formData.display_name,
+    desc: formData.desc,
+    author: formData.author,
+    repo: formData.repo,
+    tags: formData.tags,
+    social_link: formData.social_link
+  }, null, 2)
+  const issueParams = new URLSearchParams({
+    template: ISSUE_TEMPLATE,
+    title: `[Plugin] ${formData.display_name || formData.name || '插件提交'}`,
+    'plugin-info': `\`\`\`json\n${jsonToSubmit}\n\`\`\``
+  })
+  const issueUrl = `${ISSUE_BASE_URL}?${issueParams.toString()}`
+  const issueWindow = window.open(issueUrl, '_blank', 'noopener,noreferrer')
+  if (!issueWindow) {
+    window.location.href = issueUrl
+  }
   stepChecks.issueOpened = true
+  message.success('已打开 GitHub Issue，插件信息已自动预填')
 }
 </script>
 
@@ -646,12 +665,26 @@ const submitPlugin = () => {
   margin-bottom: 24px;
   width: 100%;
   box-sizing: border-box;
+  border: 2px solid var(--primary-color);
+  border-radius: 10px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
 }
 
-.form-card,
-.json-card,
-.guide-card {
-  border: 2px solid var(--primary-color);
+.form-card-tip {
+  margin: 0 0 16px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 16px;
+}
+
+.form-field--full {
+  grid-column: 1 / -1;
 }
 
 .form-section,
@@ -731,18 +764,12 @@ const submitPlugin = () => {
   margin-bottom: 24px;
 }
 
-:deep(.n-form-item-feedback-wrapper) {
-  display: none;
-}
-
 :deep(.n-input-group) {
   width: 100%;
 }
 
 .desc-textarea :deep(.n-input__textarea-el) {
-  height: 120px !important;
   min-height: 120px !important;
-  max-height: 120px !important;
   resize: none !important;
 }
 
@@ -835,6 +862,15 @@ const submitPlugin = () => {
 }
 
 @media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+
+  .form-field--full {
+    grid-column: auto;
+  }
+
   .page-header {
     padding: 12px 0;
   }
