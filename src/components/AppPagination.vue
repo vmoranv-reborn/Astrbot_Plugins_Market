@@ -112,7 +112,7 @@ onUnmounted(() => {
 .pagination-wrapper {
   display: flex;
   justify-content: center;
-  margin: 2rem auto;
+  margin: 1.4rem auto;
   padding: 0;
   position: relative;
   animation: pagination-fade-in 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -121,20 +121,21 @@ onUnmounted(() => {
 .pagination-container {
   display: flex;
   justify-content: center;
-  padding: 12px 20px;
+  padding: 8px 12px;
   position: relative;
   z-index: 1;
-  border-radius: 50px;
-  background: var(--pagination-bg, rgba(255, 255, 255, 0.05));
+  border-radius: 14px;
+  background: var(--bg-card, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-base);
   backdrop-filter: blur(10px);
   width: fit-content;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
   will-change: transform, opacity;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   
   &:hover {
-    background: var(--pagination-bg-hover, rgba(255, 255, 255, 0.08));
-    transform: translateY(-2px);
+    border-color: var(--primary-color);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28);
   }
 }
 
@@ -142,21 +143,15 @@ onUnmounted(() => {
   gap: 4px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform, opacity;
-  
-  &:hover .n-pagination-item:not(:hover):not(.n-pagination-item--active) {
-    opacity: 0.7;
-    transform: scale(0.95);
-  }
 }
 
 :deep(.n-pagination .n-pagination-item) {
-  color: var(--pagination-text, #ffffff) !important;
-  background: var(--pagination-item-bg, rgba(255, 255, 255, 0.08)) !important;
-  border: none !important;
-  backdrop-filter: blur(8px);
+  color: var(--text-primary, #ffffff) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid var(--border-base) !important;
   min-width: 32px;
   height: 32px;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: 500;
   min-width: 32px;
   height: 32px;
@@ -167,7 +162,6 @@ onUnmounted(() => {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   will-change: transform, background-color, color;
   transform-origin: center;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 @keyframes page-num-scale {
@@ -177,22 +171,20 @@ onUnmounted(() => {
 }
 
 :deep(.n-pagination .n-pagination-item--clickable:hover) {
-  color: var(--primary-color) !important;
+  color: var(--text-primary) !important;
   background-color: var(--primary-light) !important;
   border-color: var(--primary-color) !important;
-  transform: translateY(-1px) scale(1.05);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.24);
 }
 
 :deep(.n-pagination .n-pagination-item--active) {
-  color: white !important;
+  color: var(--text-tag, #000000) !important;
   background-color: var(--primary-color) !important;
   border-color: var(--primary-color) !important;
   font-weight: 700 !important;
-  box-shadow: 0 2px 12px rgba(96, 165, 250, 0.3);
+  box-shadow: 0 8px 20px rgba(255, 153, 0, 0.22);
   animation: page-num-scale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
 }
 
 :deep(.n-pagination .n-pagination-prefix),
@@ -254,10 +246,8 @@ onUnmounted(() => {
 /* 手机设备 (最大 768px) */
 @media (max-width: 768px) {
   .pagination-wrapper {
-    margin: 1.25rem 0;
+    margin: 1.1rem 0;
     padding: 0.5rem 12px;
-    background: var(--bg-secondary, rgba(0, 0, 0, 0.02));
-    border-radius: 12px;
   }
   
   :deep(.n-pagination) {
@@ -275,7 +265,6 @@ onUnmounted(() => {
     min-height: 36px;
     border-radius: 8px;
     font-weight: 600;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   }
   
   :deep(.n-pagination .n-pagination-item--button) {
@@ -287,7 +276,6 @@ onUnmounted(() => {
     background-color: transparent !important;
     border-color: transparent !important;
     color: var(--text-tertiary) !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
   }
 
   :deep(.n-pagination .n-pagination-quick-jumper) {
@@ -309,7 +297,7 @@ onUnmounted(() => {
 /* 小屏手机设备 (最大 480px) */
 @media (max-width: 480px) {
   .pagination-wrapper {
-    margin: 1rem 0;
+    margin: 0.9rem 0;
     padding: 0.5rem 8px;
   }
   
@@ -324,7 +312,6 @@ onUnmounted(() => {
     height: 34px;
     min-height: 34px;
     font-weight: 600;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   }
 
   :deep(.n-pagination .n-pagination-prefix),
@@ -361,7 +348,6 @@ onUnmounted(() => {
     min-height: 28px;
     padding: 0 4px !important;
     font-weight: 600;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   }
 
   :deep(.n-pagination .n-pagination-item--button) {
@@ -371,7 +357,6 @@ onUnmounted(() => {
   :deep(.n-pagination .n-pagination-item--disabled) {
     min-width: 20px;
     padding: 0 2px !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
   }
 }
 
@@ -433,7 +418,7 @@ onUnmounted(() => {
 
 @media (prefers-color-scheme: dark) {
   :deep(.n-pagination .n-pagination-item--active) {
-    box-shadow: 0 2px 12px rgba(96, 165, 250, 0.4);
+    box-shadow: 0 8px 20px rgba(255, 153, 0, 0.3);
   }
 }
 </style>

@@ -96,8 +96,10 @@ const copyApiSource = async () => {
 
 <style scoped>
 .app-footer {
-  background: linear-gradient(180deg, var(--bg-card) 0%, #000000 100%);
-  border-top: 3px solid var(--primary-color);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(255, 153, 0, 0.12), transparent 32%),
+    linear-gradient(180deg, var(--bg-card) 0%, #000000 100%);
+  border-top: 2px solid var(--primary-color);
   padding: 48px 0 24px;
   margin-top: 60px;
 }
@@ -105,10 +107,16 @@ const copyApiSource = async () => {
 .footer-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 28px 24px;
   display: grid;
   grid-template-columns: 1.5fr 1fr;
   gap: 48px;
+  border: 1px solid var(--border-base);
+  border-radius: 18px;
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(8px);
+  box-sizing: border-box;
 }
 
 .footer-section {
@@ -152,15 +160,17 @@ const copyApiSource = async () => {
   text-decoration: none;
   margin-bottom: 12px;
   transition: all 0.3s ease;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
 }
 
 .footer-link:hover {
-  color: #000000;
-  background-color: var(--primary-color);
-  transform: translateX(4px);
-  box-shadow: 0 0 10px rgba(255, 153, 0, 0.3);
+  color: var(--text-primary);
+  background-color: rgba(255, 153, 0, 0.12);
+  border-color: rgba(255, 153, 0, 0.4);
+  transform: translateX(2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .footer-link .n-icon {
@@ -168,10 +178,16 @@ const copyApiSource = async () => {
 }
 
 .footer-bottom {
-  border-top: 1px solid var(--primary-color);
+  max-width: 1200px;
+  border-top: 1px solid var(--border-base);
   margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
   padding-top: 24px;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .copyright {
@@ -237,7 +253,7 @@ const copyApiSource = async () => {
 /* 平板端适配 */
 @media (max-width: 1024px) {
   .footer-content {
-    padding: 0 20px;
+    padding: 24px 20px;
     gap: 36px;
   }
   
@@ -256,7 +272,8 @@ const copyApiSource = async () => {
   .footer-content {
     grid-template-columns: 1fr;
     gap: 32px;
-    padding: 0 16px;
+    padding: 20px 16px;
+    border-radius: 14px;
   }
 
   .footer-section {
@@ -292,6 +309,9 @@ const copyApiSource = async () => {
   .footer-link:hover {
     transform: none;
     color: var(--primary-color);
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
   }
 
   .footer-bottom {
@@ -315,7 +335,7 @@ const copyApiSource = async () => {
   }
 
   .footer-content {
-    padding: 0 12px;
+    padding: 16px 12px;
     gap: 24px;
   }
 

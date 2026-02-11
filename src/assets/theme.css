@@ -55,7 +55,7 @@
   --dropdown-border: #333333;
 
   /* 滚动条变量 */
-  --scrollbar-track: transparent;
+  --scrollbar-track: #121212;
   --scrollbar-thumb: rgba(255, 153, 0, 0.3);
   --scrollbar-thumb-hover: rgba(255, 153, 0, 0.5);
   --scrollbar-width: 6px;
@@ -160,7 +160,7 @@
   --dropdown-border: #ff9900;
   
   /* 滚动条变量 */
-  --scrollbar-track: transparent;
+  --scrollbar-track: #050505;
   --scrollbar-thumb: rgba(255, 153, 0, 0.4);
   --scrollbar-thumb-hover: rgba(255, 153, 0, 0.7);
 }

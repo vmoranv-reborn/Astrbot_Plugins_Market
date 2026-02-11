@@ -8,14 +8,6 @@
       :tag-options="tagOptions"
       :total-pages="totalPages"
     />
-    <div class="top-pagination-wrapper">
-      <app-pagination
-        v-if="totalPages > 1"
-        v-model="currentPage"
-        :total-pages="totalPages"
-        class="top-pagination"
-      />
-    </div>
 
     <!-- 随机排序时的工具条 -->
     <div v-if="sortBy === 'random'" class="grid-toolbar">
@@ -119,48 +111,74 @@ onMounted(() => {
 <style scoped>
 .main-layout {
   min-height: 100vh;
+  position: relative;
   display: flex;
   flex-direction: column;
+  --home-max-width: 1400px;
+  --home-gutter: clamp(12px, 2.2vw, 24px);
+  background:
+    radial-gradient(circle at 14% -8%, rgba(255, 153, 0, 0.09), transparent 42%),
+    radial-gradient(circle at 90% 12%, rgba(255, 153, 0, 0.05), transparent 36%),
+    linear-gradient(180deg, var(--bg-base), var(--bg-base));
 }
 
-.top-pagination-wrapper,
 .bottom-pagination-wrapper {
-  min-height: 48px; 
+  min-height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  padding: 0 var(--home-gutter);
+  box-sizing: border-box;
+}
+
+.bottom-pagination-wrapper:empty {
+  display: none;
 }
 
 .grid-toolbar {
-  max-width: 1400px;
+  width: 100%;
+  max-width: var(--home-max-width);
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 var(--home-gutter);
+  box-sizing: border-box;
 }
+
 .grid-toolbar-inner {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
-  padding: 4px 0 8px;
-}
-.toolbar-tip {
-  color: var(--text-tertiary);
-  font-size: 13px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-base);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(6px);
 }
 
-  .plugins-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    max-width: 1400px;
-    gap: 24px;
-    padding: 20px;
-    margin: 0 auto;
-    animation: gridAppear 0.3s ease-out;
-    animation-delay: 0.7s;
-    animation-fill-mode: backwards;
-    align-content: start;  
-    align-items: start;   
-  }
+.toolbar-tip {
+  color: var(--text-secondary);
+  font-size: 13px;
+  opacity: 0.9;
+  letter-spacing: 0.02em;
+}
+
+.plugins-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  width: 100%;
+  max-width: var(--home-max-width);
+  gap: clamp(16px, 2vw, 24px);
+  padding: 12px var(--home-gutter) 24px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  animation: gridAppear 0.3s ease-out;
+  animation-delay: 0.7s;
+  animation-fill-mode: backwards;
+  align-content: start;
+  align-items: stretch;
+}
 
 @keyframes gridAppear {
   from {
@@ -174,18 +192,18 @@ onMounted(() => {
 /* 平板和中等屏幕 */
 @media (max-width: 1024px) and (min-width: 769px) {
   .plugins-grid {
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
-    padding: 18px;
+    padding-top: 10px;
   }
 }
 
 /* 小平板屏幕 */
 @media (max-width: 768px) and (min-width: 481px) {
   .plugins-grid {
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 18px;
-    padding: 16px;
+    padding-top: 8px;
   }
 }
 
@@ -194,13 +212,14 @@ onMounted(() => {
   .plugins-grid {
     grid-template-columns: 1fr;
     gap: 16px;
-    padding: 16px;
+    padding-top: 8px;
   }
 }
 
 .plugins-grid > * {
-  max-width: 500px;
-  justify-self: center;
+  max-width: none;
+  width: 100%;
+  justify-self: stretch;
 }
 
 .loading-container {
@@ -208,15 +227,21 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 60vh;
-  padding-top: 0;
+  min-height: 52vh;
+  padding: 20px 0;
 }
 
 .custom-loading {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
+  padding: 28px 32px;
+  border: 1px solid var(--border-base);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(6px);
 }
 
 .loading-dots {
@@ -294,11 +319,15 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  min-height: 300px;
-  padding-top: 80px;
+  justify-content: center;
+  min-height: 320px;
+  padding: 40px 24px;
   text-align: center;
   color: var(--text-color-2);
+  border: 1px solid var(--border-base);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  box-shadow: var(--shadow-sm);
 }
 
 .empty-icon {

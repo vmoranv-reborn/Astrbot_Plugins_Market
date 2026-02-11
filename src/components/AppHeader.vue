@@ -1,13 +1,6 @@
 <template>
   <!-- 完整版 Header -->
   <header ref="fullHeader" class="app-header">
-    <!-- 背景装饰元素 -->
-    <div class="header-bg-decoration">
-      <div class="floating-circle circle-1"></div>
-      <div class="floating-circle circle-2"></div>
-      <div class="floating-circle circle-3"></div>
-    </div>
-    
     <n-space justify="end" style="padding: 16px" align="center" :size="16">
       <api-switcher />
     </n-space>
@@ -216,27 +209,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 0.8; }
-}
-
-@keyframes circle-appear {
-  0% {
-    opacity: 0;
-    transform: scale(0.6);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 @keyframes content-fade-up {
   0% {
     opacity: 0;
@@ -250,11 +222,11 @@ onUnmounted(() => {
 
 @keyframes header-slide-down {
   0% {
-    clip-path: inset(0 0 100% 0 round 0 0 32px 32px);
+    clip-path: inset(0 0 100% 0);
     transform: translateY(-20px);
   }
   100% {
-    clip-path: inset(0 0 0 0 round 0 0 32px 32px);
+    clip-path: inset(0 0 0 0);
     transform: translateY(0);
   }
 }
@@ -264,7 +236,7 @@ onUnmounted(() => {
   margin-bottom: 40px;
   padding: 32px 20px;
   background: var(--header-gradient);
-  border-radius: 0 0 8px 8px;
+  border-radius: 0;
   position: relative;
   overflow: hidden;
   animation: header-slide-down 0.6s cubic-bezier(0.33, 1, 0.68, 1) forwards;
@@ -283,59 +255,6 @@ onUnmounted(() => {
   bottom: 0;
   background: var(--header-overlay);
   pointer-events: none;
-}
-
-/* 背景装饰 */
-.header-bg-decoration {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.floating-circle {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 153, 0, 0.1);
-  backdrop-filter: blur(10px);
-  opacity: 0;
-}
-
-.circle-1 {
-  width: 200px;
-  height: 200px;
-  top: -100px;
-  right: -50px;
-  animation: 
-    float 6s ease-in-out infinite,
-    circle-appear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards 0.5s;
-  will-change: transform, opacity;
-}
-
-.circle-2 {
-  width: 150px;
-  height: 150px;
-  bottom: -40px;  
-  left: 20px;    
-  animation: 
-    float 8s ease-in-out infinite reverse,
-    circle-appear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards 0.6s;
-  will-change: transform, opacity;
-}
-
-.circle-3 {
-  width: 100px;
-  height: 100px;
-  top: 50%;
-  right: 10%;
-  animation: 
-    pulse 4s ease-in-out infinite,
-    circle-appear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards 0.7s;
-  will-change: transform, opacity;
 }
 
 .header-title {
@@ -433,7 +352,7 @@ onUnmounted(() => {
   .app-header {
     margin-bottom: 24px;
     padding: 20px 16px;
-    border-radius: 0 0 24px 24px;
+    border-radius: 0;
   }
 
   .search-container {
@@ -441,24 +360,6 @@ onUnmounted(() => {
     margin: 0 auto 12px;
   }
   
-  .circle-1 {
-    width: 120px;
-    height: 120px;
-    top: -60px;
-    right: -30px;
-  }
-  
-  .circle-2 {
-    width: 100px;
-    height: 100px;
-    bottom: -50px;
-    left: -20px;
-  }
-  
-  .circle-3 {
-    width: 80px;
-    height: 80px;
-  }
 }
 
 /* 仅手机设备 */
@@ -466,7 +367,7 @@ onUnmounted(() => {
   .app-header {
     margin-bottom: 24px;
     padding: 20px 16px;
-    border-radius: 0 0 24px 24px;
+    border-radius: 0;
   }
   
   .header-title {
@@ -564,21 +465,13 @@ onUnmounted(() => {
     font-size: 12px;
   }
   
-  .circle-1, .circle-2 {
-    display: none;
-  }
-  
-  .circle-3 {
-    width: 60px;
-    height: 60px;
-  }
 }
 
 /* 小屏手机设备 */
 @media (max-width: 480px) {
   .app-header {
     padding: 16px 12px;
-    border-radius: 0 0 20px 20px;
+    border-radius: 0;
   }
   
   .app-header h1 {
@@ -644,10 +537,6 @@ onUnmounted(() => {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
-}
-
-:global(.dark) .floating-circle {
-  background: rgba(90, 155, 212, 0.1);
 }
 
 /* ===== Sticky Header 样式 ===== */

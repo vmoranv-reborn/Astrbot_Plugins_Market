@@ -73,7 +73,7 @@ body {
 
 .app-container {
   min-height: 100vh;
-  background: var(--body-color, #f5f5f5);
+  background: var(--bg-base, #000000);
   display: flex;
   flex-direction: column;
 }

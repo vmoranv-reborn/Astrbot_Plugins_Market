@@ -23,30 +23,9 @@
       </div>
     </n-layout-header>
 
-    <div class="steps-section">
-      <div class="custom-steps">
-        <div 
-          v-for="(step, index) in steps" 
-          :key="index"
-          class="step-item"
-          :class="{
-            'step-current': currentStep === index + 1,
-            'step-finished': currentStep > index + 1
-          }"
-        >
-          <div class="step-indicator">{{ index + 1 }}</div>
-          <div class="step-content">
-            <div class="step-title">{{ step.title }}</div>
-            <div class="step-description">{{ step.description }}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="page-content">
       <div class="main-section">
-        <!-- 步骤1：表单 -->
-        <div v-if="currentStep === 1" class="form-section">
+        <div class="form-section">
           <n-card title="基本信息" class="form-card">
             <p class="form-card-tip">请填写公开可访问的插件信息，必填项完整后可自动生成并预填 GitHub Issue。</p>
             <n-form ref="formRef" :model="formData" :rules="rules" label-placement="top">
@@ -109,114 +88,20 @@
                 </div>
               </div>
             </n-form>
-          </n-card>
-        </div>
-
-        <!-- 步骤2：JSON预览 -->
-        <div v-if="currentStep === 2" class="json-preview-section">
-          <n-card title="JSON预览" class="json-card">
-            <template #header-extra>
-              <n-button @click="copyJSON" type="primary" ghost :disabled="!generatedJSON" class="copy-button">
+            <div class="form-actions">
+              <n-button class="action-btn" @click="copyJSON" secondary>
                 <template #icon>
                   <n-icon><copy /></n-icon>
                 </template>
                 复制JSON
               </n-button>
-            </template>
-            <div class="json-content">
-              <n-code
-                :code="generatedJSON || '点击生成按钮生成JSON'"
-                language="json"
-                :word-wrap="true"
-              />
+              <n-button class="action-btn" type="primary" @click="submitPlugin">
+                提交到GitHub
+              </n-button>
             </div>
           </n-card>
         </div>
-
-        <!-- 步骤3：提交指南 -->
-        <div v-if="currentStep === 3" class="submit-guide-section">
-          <n-card title="提交指南" class="guide-card">
-            <n-timeline>
-              <n-timeline-item 
-                title="复制JSON" 
-                :color="stepChecks.copied ? 'green' : 'grey'"
-                class="timeline-item"
-              >
-                确保已复制生成的JSON内容
-              </n-timeline-item>
-              <n-timeline-item 
-                title="打开Issue页面" 
-                :color="stepChecks.issueOpened ? 'green' : 'grey'"
-                class="timeline-item"
-              >
-                即将在新标签页中打开GitHub Issue模板
-              </n-timeline-item>
-              <n-timeline-item 
-                title="粘贴并提交" 
-                color="grey"
-                class="timeline-item"
-              >
-                将JSON粘贴到指定位置并提交Issue
-              </n-timeline-item>
-            </n-timeline>
-          </n-card>
-        </div>
       </div>
-
-      <!-- 底部操作栏 -->
-      <n-card class="action-bar">
-        <div class="action-content">
-          <div class="action-left">
-            <transition name="action-button" mode="out-in">
-              <n-button 
-                v-if="currentStep > 1" 
-                @click="prevStep"
-                quaternary
-                key="prev"
-                class="action-button-item"
-              >
-                <template #icon>
-                  <n-icon><arrow-back /></n-icon>
-                </template>
-                上一步
-              </n-button>
-            </transition>
-          </div>
-          <div class="action-right">
-            <transition name="action-button" mode="out-in">
-              <n-button 
-                v-if="currentStep === 1"
-                type="primary"
-                @click="validateAndGenerateJSON"
-                :disabled="!formData.name"
-                key="next1"
-                class="action-button-item"
-              >
-                下一步
-              </n-button>
-              <n-button 
-                v-else-if="currentStep === 2"
-                type="primary"
-                @click="nextStep"
-                :disabled="!generatedJSON"
-                key="next2"
-                class="action-button-item"
-              >
-                下一步
-              </n-button>
-              <n-button 
-                v-else
-                type="primary"
-                @click="submitPlugin"
-                key="submit"
-                class="action-button-item"
-              >
-                提交到GitHub
-              </n-button>
-            </transition>
-          </div>
-        </div>
-      </n-card>
     </div>
   </div>
 </template>
@@ -227,8 +112,6 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { 
   NLayoutHeader,
-  NTimeline,
-  NTimelineItem,
   NForm, 
   NFormItem, 
   NInput, 
@@ -236,7 +119,6 @@ import {
   NDynamicTags,
   NCard,
   NIcon,
-  NCode,
   useMessage
 } from 'naive-ui'
 import { 
@@ -252,34 +134,14 @@ const message = useMessage()
 const store = usePluginStore()
 const formRef = ref(null)
 const generatedJSON = ref('')
-const currentStep = ref(1)
 const MAX_DESC_LENGTH = 70
 const ISSUE_BASE_URL = 'https://github.com/vmoranv-reborn/AstrBot_Plugins_Collection/issues/new'
 const ISSUE_TEMPLATE = 'PLUGIN_PUBLISH.yml'
-const steps = [
-  {
-    title: '填写信息',
-    description: '填写插件基本信息'
-  },
-  {
-    title: '生成JSON',
-    description: '生成并复制JSON'
-  },
-  {
-    title: '提交',
-    description: '提交到GitHub'
-  }
-]
 
 const { isDarkMode } = storeToRefs(store)
 const toggleTheme = () => {
   store.toggleTheme()
 }
-
-const stepChecks = reactive({
-  copied: false,
-  issueOpened: false
-})
 
 const formData = reactive({
   name: '',
@@ -328,65 +190,61 @@ const rules = {
 }
 
 const goBack = () => {
-  if (currentStep.value > 1) {
-    currentStep.value--
-    return
-  }
   router.back()
 }
 
-const validateAndGenerateJSON = () => {
+const validateForm = () => new Promise((resolve, reject) => {
   formRef.value?.validate((errors) => {
     if (!errors) {
-      const jsonData = {
-        name: formData.name,
-        display_name: formData.display_name,
-        desc: formData.desc,
-        author: formData.author,
-        repo: formData.repo,
-        tags: formData.tags,
-        social_link: formData.social_link
-      }
-      generatedJSON.value = JSON.stringify(jsonData, null, 2)
-      nextStep()
-    } else {
-      message.error('请完善必填信息')
+      resolve(true)
+      return
     }
+    reject(errors)
   })
+})
+
+const buildJsonData = () => ({
+  name: formData.name,
+  display_name: formData.display_name,
+  desc: formData.desc,
+  author: formData.author,
+  repo: formData.repo,
+  tags: formData.tags,
+  social_link: formData.social_link
+})
+
+const generateJsonText = () => JSON.stringify(buildJsonData(), null, 2)
+
+const normalizeFormState = async () => {
+  try {
+    await validateForm()
+    generatedJSON.value = generateJsonText()
+    return true
+  } catch (err) {
+    message.error('请完善必填信息')
+    return false
+  }
 }
 
 const copyJSON = async () => {
+  const valid = await normalizeFormState()
+  if (!valid) {
+    return
+  }
   try {
     await navigator.clipboard.writeText(generatedJSON.value)
     message.success('JSON已复制到剪贴板')
-    stepChecks.copied = true
   } catch (err) {
     message.error('复制失败')
   }
 }
 
-const nextStep = () => {
-  if (currentStep.value < 3) {
-    currentStep.value++
+const submitPlugin = async () => {
+  const valid = await normalizeFormState()
+  if (!valid) {
+    return
   }
-}
-
-const prevStep = () => {
-  if (currentStep.value > 1) {
-    currentStep.value--
-  }
-}
-
-const submitPlugin = () => {
-  const jsonToSubmit = generatedJSON.value || JSON.stringify({
-    name: formData.name,
-    display_name: formData.display_name,
-    desc: formData.desc,
-    author: formData.author,
-    repo: formData.repo,
-    tags: formData.tags,
-    social_link: formData.social_link
-  }, null, 2)
+  const jsonToSubmit = generatedJSON.value
   const issueParams = new URLSearchParams({
     template: ISSUE_TEMPLATE,
     title: `[Plugin] ${formData.display_name || formData.name || '插件提交'}`,
@@ -397,98 +255,96 @@ const submitPlugin = () => {
   if (!issueWindow) {
     window.location.href = issueUrl
   }
-  stepChecks.issueOpened = true
   message.success('已打开 GitHub Issue，插件信息已自动预填')
 }
 </script>
 
 <style scoped>
 .submit-plugin-page {
-  min-height: 100vh;
-  height: 100vh;
-  background: var(--body-color);
+  height: 100dvh;
+  background: var(--bg-base);
   display: flex;
   flex-direction: column;
-  --action-bar-height: 72px;
-  overflow: hidden; 
+  overflow: hidden;
+  background-image:
+    radial-gradient(circle at 8% -5%, rgba(255, 153, 0, 0.18), transparent 36%),
+    radial-gradient(circle at 92% 8%, rgba(255, 153, 0, 0.1), transparent 30%);
 }
 
 .page-header {
-  background: var(--bg-base);
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border-color);
+  padding: 14px 0;
+  background: color-mix(in srgb, var(--bg-base) 86%, transparent);
+  border-bottom: 1px solid var(--border-base);
   position: sticky;
   top: 0;
-  z-index: 100;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(10px);
-  border-bottom: 2px solid var(--border-base);
-  
-  &:hover {
-    background: var(--bg-base);
-  }
+  z-index: 30;
+  backdrop-filter: blur(12px);
 }
 
 .header-content {
   width: 100%;
-  max-width: 800px;
+  max-width: 980px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  transition: padding 0.3s ease;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .header-left h1 {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
   margin: 0;
-  transition: color 0.2s ease;
+  color: var(--text-primary);
 }
 
 .header-right {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .header-left .n-button,
 .header-right .n-button {
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  &:hover {
-    transform: scale(1.05);
-  }
-  
-  &:active {
-    transform: scale(0.95);
-  }
+  border: 1px solid var(--border-base);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--bg-card) 92%, transparent);
 }
 
 .steps-section {
-  padding: 24px 0;
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border-color);
+  padding: 18px 0 14px;
 }
 
 .custom-steps {
   width: 100%;
-  max-width: 600px;
+  max-width: 980px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 18px;
   box-sizing: border-box;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   position: relative;
+}
+
+.custom-steps::before {
+  content: '';
+  position: absolute;
+  left: calc(18px + 20px);
+  right: calc(18px + 20px);
+  top: 20px;
+  height: 2px;
+  background: color-mix(in srgb, var(--border-base) 82%, transparent);
+  z-index: 0;
 }
 
 .step-item {
@@ -498,136 +354,69 @@ const submitPlugin = () => {
   align-items: center;
   position: relative;
   gap: 8px;
-  width: 120px; 
-  
-  @media (min-width: 426px) {
-    &:first-child {
-      margin-right: auto;
-    }
-    
-    &:last-child {
-      margin-left: auto;
-    }
-  }
+  z-index: 1;
 }
 
 .step-indicator {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  border: 2px solid var(--primary-color);
-  color: var(--text-tertiary);
+  border: 2px solid color-mix(in srgb, var(--border-base) 70%, var(--primary-color));
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 14px;
   background: var(--bg-base);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  z-index: 2;
+  transition: all 0.25s ease;
 }
 
 .step-content {
   text-align: center;
-  min-width: 100px;
-  padding: 0 8px;
+  min-width: 112px;
+  padding: 0 6px;
 }
 
 .step-title {
   font-size: 14px;
   font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   color: var(--text-primary);
-  transition: color 0.3s;
 }
 
 .step-description {
   font-size: 12px;
-  color: var(--text-secondary);
-  transition: color 0.3s;
+  color: var(--text-tertiary);
 }
 
 .step-current {
-  .step-indicator {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
-    color: #fff;
-  }
-  
-  .step-title {
-    color: var(--primary-color);
-  }
-  
-  .step-description {
-    color: var(--text-secondary);
-  }
+  transform: translateY(-1px);
 }
 
-.step-finished {
-  .step-indicator {
-    background: var(--success-color);
-    border-color: var(--success-color);
-    color: var(--text-tag);
-  }
-  
-  .step-title {
-    color: var(--text-primary);
-  }
+.step-current .step-indicator {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--text-tag);
+  box-shadow: 0 8px 20px rgba(255, 153, 0, 0.28);
 }
 
-@media (max-width: 768px) {
-  .steps-section {
-    padding: 16px 0;
-  }
-  
-  .custom-steps {
-    padding: 0 24px;
-  }
-  
-  .step-content {
-    min-width: 80px;
-  }
-  
-  .step-description {
-    display: none;
-  }
+.step-current .step-title {
+  color: var(--primary-color);
 }
 
-@media (max-width: 425px) {
-  .custom-steps {
-    justify-content: center;
-  }
-  
-  .step-item {
-    display: none;
-    width: auto;
-    
-    &.step-current {
-      display: flex;
-      flex-direction: row;
-      gap: 12px;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
-      
-      .step-indicator {
-        flex: 0 0 32px; 
-      }
-      
-      .step-content {
-        text-align: left;
-      }
-      
-      .step-description {
-        display: block;
-      }
-    }
-  }
-  
-  .step-line {
-    display: none;
-  }
+.step-current .step-description {
+  color: var(--text-secondary);
+}
+
+.step-finished .step-indicator {
+  background: color-mix(in srgb, var(--primary-color) 92%, #ffffff 8%);
+  border-color: var(--primary-color);
+  color: var(--text-tag);
+}
+
+.step-finished .step-title {
+  color: var(--text-primary);
 }
 
 .page-content {
@@ -635,301 +424,245 @@ const submitPlugin = () => {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  background: var(--bg-card);
-  padding: 24px;
-  padding-bottom: calc(var(--action-bar-height, 72px) + 24px);
+  background: transparent;
+  padding: 22px 18px;
   box-sizing: border-box;
-  height: calc(100vh - 140px);
+  scrollbar-gutter: stable;
+}
 
-  :deep(.n-card) {
-    background: var(--bg-card);
-  }
+.page-content :deep(.n-card) {
+  background: color-mix(in srgb, var(--bg-card) 96%, transparent);
+  border-color: var(--border-base);
 }
 
 .main-section {
   flex: 1;
-  max-width: 800px;
+  max-width: 980px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
   box-sizing: border-box;
-  position: relative;
 }
 
 .form-card,
 .json-card,
 .guide-card {
-  margin-bottom: 24px;
+  margin-bottom: 0;
   width: 100%;
   box-sizing: border-box;
-  border: 2px solid var(--primary-color);
-  border-radius: 10px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
+  border: 1px solid color-mix(in srgb, var(--primary-color) 48%, var(--border-base));
+  border-radius: 14px;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
+  overflow: hidden;
 }
 
 .form-card-tip {
-  margin: 0 0 16px;
+  margin: 0 0 14px;
   color: var(--text-secondary);
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.55;
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 16px;
+  gap: 0 16px;
 }
 
 .form-field--full {
   grid-column: 1 / -1;
 }
 
-.form-section,
-.json-preview-section,
-.submit-guide-section {
-  width: 100%;
-  min-height: 400px;
-  box-sizing: border-box;
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid color-mix(in srgb, var(--border-base) 78%, transparent);
+  margin-top: 6px;
+  padding-top: 14px;
+}
+
+.action-btn {
+  min-width: 112px;
+  border-radius: 10px;
 }
 
 .json-preview-section {
-  :deep(.n-code) {
-    border-radius: 8px;
-    background: var(--bg-base);
-  }
+  width: 100%;
+}
+
+.json-preview-section :deep(.n-code) {
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--bg-base) 95%, transparent);
+  border: 1px solid var(--border-base);
 }
 
 .json-content {
   position: relative;
-  opacity: 0;
-  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+  animation: fadeInUp 0.35s ease;
 }
 
 .copy-button {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  &:active {
-    transform: translateY(0);
-  }
-}
-
-.action-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 90;
-  border-radius: 0;
-  background: var(--bg-card);
-  box-shadow: var(--shadow-lg);
-}
-
-.action-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  height: var(--action-bar-height, 72px);
-  padding: 0 24px;
-}
-
-.action-left,
-.action-right {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.action-button-item {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  &:hover {
-    transform: translateY(-2px);
-  }
-  
-  &:active {
-    transform: translateY(0);
-  }
+  border-radius: 10px;
 }
 
 :deep(.n-form-item) {
-  margin-bottom: 24px;
+  margin-bottom: 18px;
+}
+
+:deep(.n-form-item-label__text) {
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 :deep(.n-input-group) {
   width: 100%;
 }
 
+:deep(.n-dynamic-tags) {
+  min-height: 40px;
+}
+
+:deep(.n-card-header) {
+  border-bottom: 1px solid color-mix(in srgb, var(--border-base) 78%, transparent);
+}
+
 .desc-textarea :deep(.n-input__textarea-el) {
   min-height: 120px !important;
-  resize: none !important;
 }
 
-.desc-textarea :deep(textarea) {
-  resize: none !important;
-}
-
-.desc-textarea :deep(.n-input__textarea) {
-  resize: none !important;
-}
-
+.desc-textarea :deep(textarea),
+.desc-textarea :deep(.n-input__textarea),
 .desc-textarea :deep(.n-input-wrapper) {
   resize: none !important;
 }
 
 :deep(.n-timeline) {
-  padding: 16px;
+  padding: 6px 8px 2px;
 }
 
-.timeline-item {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.action-button-enter-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.action-button-leave-active {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.action-button-enter-from {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-.action-button-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
+.submit-guide-section :deep(.n-timeline-item-content) {
+  border: 1px solid var(--border-base);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.02);
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.form-card,
-.json-card,
-.guide-card {
-  animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.n-button {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  &:active {
-    transform: translateY(0);
-    transition-duration: 0.1s;
-  }
-}
-
-:deep(.n-form-item) {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  &:hover {
-    transform: translateX(2px);
-  }
-}
-
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .form-grid {
     grid-template-columns: 1fr;
-    column-gap: 0;
+    gap: 0;
   }
 
   .form-field--full {
     grid-column: auto;
   }
 
+  .step-description {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
   .page-header {
     padding: 12px 0;
   }
 
-  .header-content {
-    padding: 0 16px;
+  .header-content,
+  .custom-steps {
+    padding: 0 14px;
   }
 
-  .steps-section {
-    padding: 16px 0;
+  .custom-steps::before {
+    left: calc(14px + 20px);
+    right: calc(14px + 20px);
   }
 
-  .submit-plugin-page {
-    --action-bar-height: 64px;
-  }
-}
-
-@media (max-width: 425px) {
-    .submit-steps {
-    :deep(.n-step) {
-      display: none;
-      
-      &.n-step--current {
-        display: flex;
-        flex: 0 1 auto;
-      }
-    }
-    
-    :deep(.n-step-splitor) {
-      display: none;
-    }
-    
-    :deep(.n-steps-content) {
-      justify-content: center;
-    }
-    
-    :deep(.n-step-header__title) {
-      font-size: 16px;
-      display: block !important;
-    }
+  .step-content {
+    min-width: 90px;
   }
 
   .page-content {
-    padding: 16px;
-    padding-bottom: calc(var(--action-bar-height, 64px) + 16px);
-    height: calc(100vh - 120px);
+    padding: 16px 12px;
+  }
+}
+
+@media (max-width: 540px) {
+  .custom-steps::before {
+    display: none;
   }
 
-  .action-content {
-    padding: 0 16px;
-    height: var(--action-bar-height);
+  .custom-steps {
+    justify-content: center;
+  }
+
+  .step-item {
+    display: none;
+    flex: 0 1 auto;
+  }
+
+  .step-item.step-current {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .step-item.step-current .step-content {
+    text-align: left;
+    min-width: auto;
+  }
+
+  .step-item.step-current .step-description {
+    display: block;
+  }
+
+  .step-item.step-current .step-indicator {
+    width: 34px;
+    height: 34px;
+  }
+
+  .header-left h1 {
+    font-size: 20px;
+  }
+
+  .action-btn {
+    min-width: 96px;
+  }
+}
+
+@media (max-width: 420px) {
+  .form-actions {
+    gap: 8px;
+  }
+
+  .action-btn {
+    min-width: 90px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
   :deep(.n-card-header) {
-    padding: 16px;
+    padding: 14px;
   }
 
   :deep(.n-card__content) {
-    padding: 16px;
+    padding: 14px;
   }
 }
 </style>

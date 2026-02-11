@@ -175,23 +175,24 @@ onUnmounted(() => {
 }
 
 .api-option.is-active {
-  background: var(--primary-color);
-  opacity: 0.1;
+  background: color-mix(in srgb, var(--primary-color) 22%, transparent);
+  box-shadow: inset 2px 0 0 var(--primary-color);
 }
 
 .api-option-icon {
-  color: var(--text-secondary);
-  font-size: 16px;
-}
-
-.api-option.is-active .api-option-icon {
   color: var(--primary-color);
+  font-size: 16px;
 }
 
 .api-option-name {
   flex: 1;
   font-size: 14px;
-  color: var(--text-primary);
+  color: #ffffff;
+}
+
+.api-option.is-active .api-option-name {
+  color: #ffffff;
+  font-weight: 600;
 }
 
 .check-icon {
